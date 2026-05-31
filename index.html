@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Pôle Santé | Concept Care — L'officine au Service du Territoire</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pole: {
+                            50: '#eff8ff', 100: '#dbeeff', 200: '#b5deff',
+                            400: '#4db8f5', 500: '#1b78c2', 600: '#1567ab',
+                            700: '#1559a0', 800: '#0f3f79', 900: '#0d3a6e',
+                        },
+                        vert: {
+                            50: '#f3ffe8', 100: '#e3fdc8', 200: '#c7fa97',
+                            400: '#9dd558', 500: '#7fc241', 600: '#64a82e',
+                            700: '#4e8a22', 900: '#2d5e0a',
+                        },
+                        telecons: { 50:'#f0f9ff', 100:'#e0f2fe', 500:'#0ea5e9', 700:'#0369a1' },
+                        pharma:   { 50:'#f0fdfa', 100:'#ccfbf1', 500:'#14b8a6', 700:'#0f766e' },
+                        prev:     { 50:'#fdf4ff', 100:'#fae8ff', 500:'#a855f7', 700:'#7e22ce' },
+                        croiss:   { 50:'#fff7ed', 100:'#ffedd5', 500:'#f97316', 700:'#c2410c' },
+                        territ:   { 50:'#fef2f2', 100:'#fee2e2', 500:'#ef4444', 700:'#b91c1c' },
+                        warning:  { 50:'#fffbeb', 100:'#fef3c7', 500:'#f59e0b', 700:'#b45309' },
+                    },
+                    fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .page-content { display:none; animation: fadeIn .4s ease-out; }
+        .page-content.active { display:block; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(15px)} to{opacity:1;transform:translateY(0)} }
+        .nav-scroll::-webkit-scrollbar { display:none; }
+        .nav-scroll { -ms-overflow-style:none; scrollbar-width:none; }
+        .device-card { transition:all .3s ease; }
+        .device-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(27,120,194,.18); }
+        .badge-green { background:linear-gradient(135deg,#7fc241,#4e8a22); }
+        .badge-blue  { background:linear-gradient(135deg,#1b78c2,#0d3a6e); }
+        .hero-bg { background:linear-gradient(135deg,#0d3a6e 0%,#1b78c2 55%,#4db8f5 100%); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="bg-pole-900 text-white shadow-lg z-10 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex items-center space-x-4">
+            <div class="bg-white p-1.5 rounded-xl shadow-inner">
+                <img src="images/logo-pole-sante.png" alt="le Pôle Santé — Concept care" class="h-14 w-auto">
+            </div>
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <img src="https://elodiatech.com/wp-content/uploads/2023/11/elodia-tech-LOGO-B.png" alt="Elodia Tech" class="h-6 w-auto brightness-0 invert opacity-90">
+                </div>
+                <p class="text-pole-100 text-sm font-medium italic">L'officine au Service du Territoire, Un levier de croissance.</p>
+            </div>
+        </div>
+        <div class="text-sm font-bold bg-white/10 py-2 px-5 rounded-full flex items-center border border-white/20 shrink-0">
+            <svg class="w-4 h-4 mr-2 text-vert-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Nord Atlantique · Martinique
+        </div>
+    </div>
+    <nav class="bg-pole-900 border-t border-pole-700 overflow-x-auto nav-scroll">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ul class="flex w-max" id="nav-tabs">
+                <li><button onclick="showPage('concept')"     class="nav-btn active px-5 py-4 text-sm font-bold text-white border-b-4 border-vert-500 bg-pole-800/50 transition-colors" data-target="concept">Vue d'ensemble</button></li>
+                <li><button onclick="showPage('telecons')"    class="nav-btn px-5 py-4 text-sm font-bold text-pole-100 hover:text-white border-b-4 border-transparent hover:border-telecons-500 transition-colors" data-target="telecons">Téléconsultation</button></li>
+                <li><button onclick="showPage('entretiens')"  class="nav-btn px-5 py-4 text-sm font-bold text-pole-100 hover:text-white border-b-4 border-transparent hover:border-pharma-500 transition-colors" data-target="entretiens">Entretiens Pharmaceutiques</button></li>
+                <li><button onclick="showPage('prevention')"  class="nav-btn px-5 py-4 text-sm font-bold text-pole-100 hover:text-white border-b-4 border-transparent hover:border-prev-500 transition-colors" data-target="prevention">Prévention & Dépistage</button></li>
+                <li><button onclick="showPage('croissance')"  class="nav-btn px-5 py-4 text-sm font-bold text-pole-100 hover:text-white border-b-4 border-transparent hover:border-croiss-500 transition-colors" data-target="croissance">Levier de Croissance</button></li>
+                <li><button onclick="showPage('territoire')"  class="nav-btn px-5 py-4 text-sm font-bold text-pole-100 hover:text-white border-b-4 border-transparent hover:border-territ-500 transition-colors" data-target="territoire">Contexte Territorial</button></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+<!-- ═══════════ VUE D'ENSEMBLE ═══════════ -->
+<section id="concept" class="page-content active">
+
+    <!-- Hero -->
+    <div class="hero-bg rounded-3xl p-8 md:p-12 text-white mb-10 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+            <svg viewBox="0 0 700 400" class="w-full h-full"><circle cx="600" cy="-60" r="320" fill="white"/><circle cx="-60" cy="370" r="260" fill="white"/></svg>
+        </div>
+        <div class="relative z-10 flex flex-col lg:flex-row gap-10 items-start lg:items-center">
+            <div class="flex-1">
+                <div class="flex flex-wrap gap-2 mb-5">
+                    <span class="badge-green text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Concept Care</span>
+                    <span class="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Pharmacies — Martinique</span>
+                    <span class="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">2025</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">le Pôle Santé</h2>
+                <p class="text-xl font-semibold text-pole-100 mb-5 italic max-w-xl">"L'officine au Service du Territoire, Un levier de croissance."</p>
+                <p class="text-pole-100 text-base max-w-2xl mb-8 leading-relaxed">Transformez votre pharmacie en véritable <strong class="text-white">hub de santé de proximité</strong> : trois espaces complémentaires — téléconsultation connectée, entretiens pharmaceutiques structurés, prévention et dépistage — pour pallier le désert médical, fidéliser vos patients chroniques et diversifier vos revenus.</p>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="showPage('telecons')" class="bg-white text-pole-700 font-bold px-6 py-3 rounded-xl hover:bg-pole-50 transition-colors flex items-center text-sm">
+                        Espace 1 — Téléconsultation
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                    <button onclick="showPage('croissance')" class="bg-vert-500 text-white font-bold px-6 py-3 rounded-xl hover:bg-vert-600 transition-colors text-sm">Leviers de croissance</button>
+                </div>
+            </div>
+            <div class="shrink-0 w-full lg:w-72">
+                <div class="bg-white/10 border border-white/20 rounded-2xl p-6">
+                    <div class="text-center mb-4">
+                        <svg class="w-10 h-10 mx-auto text-vert-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        <strong class="text-white block text-sm">Label Pôle Santé Concept Care</strong>
+                    </div>
+                    <ul class="space-y-2 text-sm text-pole-100">
+                        <li class="flex items-center gap-2"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Espace téléconsultation Medispot ONE</li>
+                        <li class="flex items-center gap-2"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Entretiens pharmaceutiques (BPM)</li>
+                        <li class="flex items-center gap-2"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Prévention, dépistage, vaccination</li>
+                        <li class="flex items-center gap-2"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Formation & accompagnement Elodia</li>
+                        <li class="flex items-center gap-2"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Partenariats ARS · CPAM · CTM · CAP Nord</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-slate-100">
+            <div class="text-3xl font-extrabold text-pole-500 mb-1">+200</div>
+            <div class="text-sm text-slate-600">nouveaux patients captés estimés</div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-slate-100">
+            <div class="text-3xl font-extrabold text-vert-600 mb-1">+10 %</div>
+            <div class="text-sm text-slate-600">passages mensuels attendus</div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-slate-100">
+            <div class="text-3xl font-extrabold text-pole-500 mb-1">+20 %</div>
+            <div class="text-sm text-slate-600">fidélité patients chroniques</div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-slate-100">
+            <div class="text-3xl font-extrabold text-vert-600 mb-1">1 225 €</div>
+            <div class="text-sm text-slate-600">aide équipement éligible ROSP/FAMI</div>
+        </div>
+    </div>
+
+    <!-- Les 3 Espaces -->
+    <h3 class="text-2xl font-bold text-slate-900 mb-6 text-center">Les 3 Espaces du Pôle Santé</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div onclick="showPage('telecons')" class="cursor-pointer group bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 overflow-hidden transition-all duration-300 hover:-translate-y-1">
+            <div class="h-2 w-full bg-pole-500"></div>
+            <div class="p-7">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="bg-pole-100 text-pole-700 text-xs font-bold px-2 py-0.5 rounded">Espace 1</span>
+                    <span class="text-xs text-slate-400">CE Médical IIa</span>
+                </div>
+                <div class="bg-pole-50 w-14 h-14 rounded-2xl flex items-center justify-center text-pole-500 mb-4 group-hover:scale-110 transition-transform">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.362a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Téléconsultation Connectée</h3>
+                <p class="text-pole-700 font-medium text-sm mb-3">Medispot ONE · ClikOdoc</p>
+                <p class="text-slate-500 text-sm mb-4">6 dispositifs médicaux sans fil, ordonnance électronique immédiate, prise en charge Assurance Maladie. Réponse directe au désert médical.</p>
+                <span class="text-pole-500 font-bold flex items-center text-sm">Découvrir <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>
+            </div>
+        </div>
+        <div onclick="showPage('entretiens')" class="cursor-pointer group bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 overflow-hidden transition-all duration-300 hover:-translate-y-1">
+            <div class="h-2 w-full bg-pharma-500"></div>
+            <div class="p-7">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="bg-pharma-100 text-pharma-700 text-xs font-bold px-2 py-0.5 rounded">Espace 2</span>
+                    <span class="text-xs text-slate-400">Acte rémunéré</span>
+                </div>
+                <div class="bg-pharma-50 w-14 h-14 rounded-2xl flex items-center justify-center text-pharma-600 mb-4 group-hover:scale-110 transition-transform">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Entretiens Pharmaceutiques</h3>
+                <p class="text-pharma-700 font-medium text-sm mb-3">BPM · Asthme · AVK · Observance</p>
+                <p class="text-slate-500 text-sm mb-4">Bilan Partagé de Médication pour patients 65+ / ALD / polymédiqués. Rémunération jusqu'à 63 € par bilan. Fidélisation extrême des chroniques.</p>
+                <span class="text-pharma-600 font-bold flex items-center text-sm">Découvrir <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>
+            </div>
+        </div>
+        <div onclick="showPage('prevention')" class="cursor-pointer group bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 overflow-hidden transition-all duration-300 hover:-translate-y-1">
+            <div class="h-2 w-full bg-prev-500"></div>
+            <div class="p-7">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="bg-prev-100 text-prev-700 text-xs font-bold px-2 py-0.5 rounded">Espace 3</span>
+                    <span class="text-xs text-slate-400">Tous publics</span>
+                </div>
+                <div class="bg-prev-50 w-14 h-14 rounded-2xl flex items-center justify-center text-prev-600 mb-4 group-hover:scale-110 transition-transform">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-1">Prévention & Dépistage</h3>
+                <p class="text-prev-700 font-medium text-sm mb-3">Cancers · Diabète · Vaccinations</p>
+                <p class="text-slate-500 text-sm mb-4">Actions de dépistage organisé (cancers, HTA, glycémie), vaccination, SAPHYR, animations santé, partenariats associatifs locaux.</p>
+                <span class="text-prev-600 font-bold flex items-center text-sm">Découvrir <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pourquoi maintenant -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+        <h3 class="text-2xl font-bold text-pole-900 mb-6 text-center">Pourquoi le Pôle Santé maintenant ?</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="bg-territ-50 border border-territ-200 rounded-xl p-5">
+                <div class="text-2xl mb-2">🏥</div>
+                <h4 class="font-bold text-slate-900 text-sm mb-2">Désert médical critique</h4>
+                <p class="text-xs text-slate-600">Densité de MG en baisse, quasi-absence de spécialistes, ~20 % de renoncement aux soins dans les zones rurales du Nord Atlantique.</p>
+            </div>
+            <div class="bg-pole-50 border border-pole-200 rounded-xl p-5">
+                <div class="text-2xl mb-2">💊</div>
+                <h4 class="font-bold text-slate-900 text-sm mb-2">Modèle officinal fragilisé</h4>
+                <p class="text-xs text-slate-600">Érosion des marges médicament, baisse des prix remboursables, frais d'approche élevés. La dépendance aux boîtes doit être réduite.</p>
+            </div>
+            <div class="bg-vert-50 border border-vert-200 rounded-xl p-5">
+                <div class="text-2xl mb-2">👥</div>
+                <h4 class="font-bold text-slate-900 text-sm mb-2">Population vieillissante</h4>
+                <p class="text-xs text-slate-600">~30 % de la population a plus de 60 ans. Prévalence HTA 35 %, diabète 14 %. La pharmacie est le 1er recours santé de facto.</p>
+            </div>
+            <div class="bg-croiss-50 border border-croiss-200 rounded-xl p-5">
+                <div class="text-2xl mb-2">📈</div>
+                <h4 class="font-bold text-slate-900 text-sm mb-2">Opportunité de croissance</h4>
+                <p class="text-xs text-slate-600">Nouveaux actes rémunérés, fidélisation patients chroniques, reconnaissance ARS/CPAM/CTM. L'officine devient indispensable.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ ESPACE 1 — TÉLÉCONSULTATION ═══════════ -->
+<section id="telecons" class="page-content">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+        <div class="bg-pole-500 px-6 py-8 md:px-10 text-white">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <div class="text-xs uppercase tracking-wide text-pole-100 mb-1 font-semibold">Espace 1 · Certifié CE Médical IIa</div>
+                    <h2 class="text-3xl font-bold mb-1">Téléconsultation Connectée</h2>
+                    <p class="text-pole-100 text-lg">Pallier le désert médical et capter de nouveaux flux patients.</p>
+                </div>
+                <div class="shrink-0">
+                    <img src="https://elodiatech.com/wp-content/uploads/2025/01/Telemedecine-par-ElodiaTech-6.png" alt="Elodia recommande ClikOdoc — Téléconsultation" class="h-20 w-auto">
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 md:p-10">
+
+            <!-- Medispot ONE -->
+            <div class="mb-10">
+                <div class="flex items-center gap-3 mb-2 border-l-4 border-pole-500 pl-3">
+                    <img src="https://elodiatech.com/wp-content/uploads/2025/05/logo-medispot-150x150.png" alt="Medispot" class="h-10 w-auto bg-white rounded-lg p-1">
+                    <h3 class="text-2xl font-bold text-slate-900">Le Medispot ONE — Dispositif Médical Connecté</h3>
+                </div>
+                <p class="text-slate-600 mb-6">Appareil sans fil de <strong>260 g</strong> intégrant 6 outils essentiels, <strong>8 heures d'autonomie</strong>, certifié <span class="bg-pole-100 text-pole-700 px-2 py-0.5 rounded font-bold text-xs">CE Médical Classe IIa</span>, conforme RGPD, hébergement HDS.</p>
+
+                <div class="rounded-2xl overflow-hidden shadow-md border border-slate-200 mb-8">
+                    <img src="images/medispot-6-dispositifs.webp" alt="Medispot ONE — 6 dispositifs médicaux connectés : Pression sanguine, Température, Saturation en oxygène, Otoscope, Stéthoscope, Rythme cardiaque" class="w-full">
+                </div>
+
+                <!-- Cabin photo -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="rounded-2xl overflow-hidden shadow-md border border-slate-200">
+                        <img src="images/cabine-teleconsultation.jpg" alt="Cabine de téléconsultation — patient assisté par infirmier avec médecin en vidéo" class="w-full h-full object-cover min-h-52">
+                    </div>
+                    <div class="bg-slate-50 rounded-2xl border border-slate-200 p-5 flex flex-col justify-center space-y-3">
+                        <h4 class="font-bold text-slate-900 mb-1">La cabine — espace confidentiel dédié</h4>
+                        <div class="flex items-start gap-3"><div class="bg-pole-100 p-1.5 rounded-lg shrink-0"><svg class="w-4 h-4 text-pole-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-slate-600">Espace insonorisé, intimité garantie pour l'échange médecin-patient</p></div>
+                        <div class="flex items-start gap-3"><div class="bg-pole-100 p-1.5 rounded-lg shrink-0"><svg class="w-4 h-4 text-pole-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-slate-600">Écran HD, connexion vidéo sécurisée avec le médecin ClikOdoc</p></div>
+                        <div class="flex items-start gap-3"><div class="bg-vert-100 p-1.5 rounded-lg shrink-0"><svg class="w-4 h-4 text-vert-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-slate-600">Données médicales transmises en temps réel au praticien</p></div>
+                        <div class="flex items-start gap-3"><div class="bg-vert-100 p-1.5 rounded-lg shrink-0"><svg class="w-4 h-4 text-vert-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-slate-600">Ordonnance électronique délivrée directement à l'officine</p></div>
+                        <div class="flex items-start gap-3"><div class="bg-pole-100 p-1.5 rounded-lg shrink-0"><svg class="w-4 h-4 text-pole-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div><p class="text-sm text-slate-600">Interface accessible à tous, y compris seniors avec fracture numérique</p></div>
+                    </div>
+                </div>
+
+                <!-- Specs badge row -->
+                <div class="flex flex-wrap gap-3">
+                    <span class="bg-pole-100 text-pole-800 text-xs font-bold px-3 py-1.5 rounded-full">⚖️ 260 g — sans fil</span>
+                    <span class="bg-vert-100 text-vert-800 text-xs font-bold px-3 py-1.5 rounded-full">🔋 8 h d'autonomie</span>
+                    <span class="bg-pole-100 text-pole-800 text-xs font-bold px-3 py-1.5 rounded-full">🛡️ CE Médical Classe IIa</span>
+                    <span class="bg-vert-100 text-vert-800 text-xs font-bold px-3 py-1.5 rounded-full">🔒 RGPD · Hébergement HDS</span>
+                    <span class="bg-croiss-100 text-croiss-800 text-xs font-bold px-3 py-1.5 rounded-full">💶 Aide 1 225 € ROSP/FAMI éligible</span>
+                </div>
+            </div>
+
+            <!-- ClikOdoc block -->
+            <div class="bg-gradient-to-r from-pole-900 to-pole-700 rounded-2xl p-8 text-white mb-10">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="bg-white rounded-xl p-2">
+                                <img src="https://elodiatech.com/wp-content/uploads/2025/05/logo-clicodoc-150x150.png" alt="ClikOdoc" class="h-12 w-auto">
+                            </div>
+                            <div>
+                                <div class="text-xs text-pole-200 font-medium uppercase tracking-wide">Elodia Tech recommande</div>
+                                <div class="text-3xl font-extrabold leading-none">clikOdoc</div>
+                            </div>
+                        </div>
+                        <p class="text-pole-100 mb-5">Plateforme de téléconsultation intégrée au Medispot ONE — connecte votre pharmacie à un réseau de médecins disponibles, garantissant un accès rapide aux soins pour vos patients, avec prise en charge par l'Assurance Maladie.</p>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex items-center gap-2 text-pole-100"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Médecins disponibles 7j/7 — délai moyen &lt; 15 min</li>
+                            <li class="flex items-center gap-2 text-pole-100"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Connexion sécurisée et chiffrée, conforme HDS</li>
+                            <li class="flex items-center gap-2 text-pole-100"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Remboursement Sécurité Sociale — tarif consultation de médecine générale</li>
+                            <li class="flex items-center gap-2 text-pole-100"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Ordonnance électronique remise immédiatement à la pharmacie</li>
+                        </ul>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 shrink-0 w-full md:w-60">
+                        <div class="bg-white/10 rounded-xl p-4 text-center"><div class="text-2xl font-bold text-vert-400">&lt; 15'</div><div class="text-xs text-pole-200 mt-1">Délai médecin</div></div>
+                        <div class="bg-white/10 rounded-xl p-4 text-center"><div class="text-2xl font-bold text-vert-400">100 %</div><div class="text-xs text-pole-200 mt-1">Couverture territoire</div></div>
+                        <div class="bg-white/10 rounded-xl p-4 text-center"><div class="text-2xl font-bold text-vert-400">SS</div><div class="text-xs text-pole-200 mt-1">Remboursé</div></div>
+                        <div class="bg-white/10 rounded-xl p-4 text-center"><div class="text-2xl font-bold text-vert-400">+10 %</div><div class="text-xs text-pole-200 mt-1">Passages/mois</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cadre légal -->
+            <div class="bg-slate-800 text-white p-6 rounded-xl flex flex-col sm:flex-row items-start gap-4">
+                <svg class="w-8 h-8 text-yellow-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+                <div>
+                    <strong class="block mb-1">Cadre légal (CSP art. R.4235-22 à R.4235-25)</strong>
+                    <p class="text-sm text-slate-300">Dans le cadre de ses missions de service public, la pharmacie met à disposition un espace de téléconsultation médicale dans le strict respect du Code de la Santé Publique. <strong class="text-white">Autorisé :</strong> informations sanitaires loyales et factuelles. <strong class="text-white">Interdit :</strong> publicité, comparaison d'officines, promesses de résultats. Orientation exclusivité santé publique.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ ESPACE 2 — ENTRETIENS PHARMACEUTIQUES ═══════════ -->
+<section id="entretiens" class="page-content">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+        <div class="bg-pharma-500 px-6 py-8 md:px-10 text-white">
+            <div class="text-xs uppercase tracking-wide text-pharma-100 mb-1 font-semibold">Espace 2 · Actes rémunérés</div>
+            <h2 class="text-3xl font-bold mb-1">Entretiens Pharmaceutiques</h2>
+            <p class="text-pharma-100 text-lg">Fidélisation extrême des patients chroniques et ALD.</p>
+        </div>
+        <div class="p-6 md:p-10">
+
+            <div class="mb-8 rounded-2xl overflow-hidden shadow-md border border-slate-200 md:float-right md:ml-8 md:mb-4 md:w-80">
+                <img src="images/pharmacien-patient.jpg" alt="Pharmacien en entretien avec une patiente âgée — Bilan partagé de médication" class="w-full">
+                <div class="bg-pharma-50 px-4 py-2 text-xs text-pharma-700 font-medium text-center">Entretien pharmaceutique personnalisé</div>
+            </div>
+
+            <p class="text-slate-700 text-lg mb-8 leading-relaxed">L'espace d'entretien pharmaceutique est dédié au <strong>suivi structuré des patients chroniques</strong> : asthme, AVK, bilans partagés de médication (BPM), entretiens d'observance. C'est le levier de <strong>fidélisation le plus puissant</strong> de l'officine moderne, adossé à des actes remboursés reconnus par l'Assurance Maladie.</p>
+
+            <!-- BPM detail -->
+            <div class="bg-pharma-50 border border-pharma-200 rounded-2xl p-6 mb-8">
+                <h3 class="text-xl font-bold text-pharma-900 mb-4 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-pharma-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Le Bilan Partagé de Médication (BPM)
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white border border-pharma-200 rounded-xl p-4">
+                        <div class="text-xs font-bold text-pharma-700 uppercase tracking-wide mb-2">Éligibilité patient</div>
+                        <ul class="text-sm text-slate-700 space-y-1.5">
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-pharma-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>Plus de <strong>65 ans</strong></li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-pharma-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>En <strong>ALD</strong></li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-pharma-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>Au moins <strong>5 molécules</strong> prescrites</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white border border-pharma-200 rounded-xl p-4">
+                        <div class="text-xs font-bold text-pharma-700 uppercase tracking-wide mb-2">Année N — Premier bilan</div>
+                        <ul class="text-sm text-slate-700 space-y-1.5">
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-vert-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>Entretien de recueil des traitements</li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-vert-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>Analyse complète des traitements</li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-vert-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>Entretien-conseil personnalisé</li>
+                            <li class="mt-2 bg-vert-50 text-vert-800 font-bold text-sm px-3 py-1.5 rounded-lg text-center">Rémunération : 63 €</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white border border-pharma-200 rounded-xl p-4">
+                        <div class="text-xs font-bold text-pharma-700 uppercase tracking-wide mb-2">Année N+1 — Suivi</div>
+                        <ul class="text-sm text-slate-700 space-y-1.5">
+                            <li class="text-xs text-slate-500 mb-1 italic">Si changement de traitement :</li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-pole-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>Actualisation analyse + entretien suivi + entretien observance — <strong>31,50 €</strong></li>
+                            <li class="text-xs text-slate-500 mb-1 italic mt-2">Sans changement :</li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-pole-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>2 entretiens d'observance — <strong>21,50 €</strong></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-white border border-pharma-200 rounded-xl p-5">
+                    <h4 class="font-bold text-slate-900 text-sm mb-3">Ce qu'Elodia fournit pour la mise en place du BPM :</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-slate-700">
+                        <div class="flex items-center gap-2"><svg class="w-4 h-4 text-pharma-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Contexte légal complet</div>
+                        <div class="flex items-center gap-2"><svg class="w-4 h-4 text-pharma-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Ciblage patients éligibles</div>
+                        <div class="flex items-center gap-2"><svg class="w-4 h-4 text-pharma-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Formulaire d'adhésion</div>
+                        <div class="flex items-center gap-2"><svg class="w-4 h-4 text-pharma-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Guide d'entretien cadré</div>
+                        <div class="flex items-center gap-2"><svg class="w-4 h-4 text-pharma-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Vidéos d'entretiens</div>
+                        <div class="flex items-center gap-2"><svg class="w-4 h-4 text-pharma-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Formation équipe</div>
+                        <div class="flex items-center gap-2"><svg class="w-4 h-4 text-pharma-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Dossier patient</div>
+                        <div class="flex items-center gap-2"><svg class="w-4 h-4 text-pharma-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Connexion DMP</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other entretiens -->
+            <h3 class="text-xl font-bold text-slate-900 mb-4 border-l-4 border-pharma-500 pl-3">Autres Entretiens Rémunérés</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <h4 class="font-bold text-pharma-700 mb-2">Asthme &amp; Pathologies Respiratoires</h4>
+                    <p class="text-sm text-slate-600 mb-2">Entretiens pharmaceutiques d'observance pour les patients asthmatiques — technique d'inhalation, suivi de traitement de fond, reconnaissance des crises. Particulièrement pertinent dans un contexte de pollution au chlordécone.</p>
+                    <span class="text-xs bg-pharma-100 text-pharma-700 font-bold px-2 py-1 rounded">Acte remboursé par l'AM</span>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <h4 class="font-bold text-pharma-700 mb-2">AVK &amp; Anticoagulants</h4>
+                    <p class="text-sm text-slate-600 mb-2">Suivi des patients sous anticoagulants oraux (AVK) — éducation sur le risque hémorragique, interactions médicamenteuses, alimentation, suivi INR et ajustement de l'observance.</p>
+                    <span class="text-xs bg-pharma-100 text-pharma-700 font-bold px-2 py-1 rounded">Acte remboursé par l'AM</span>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <h4 class="font-bold text-pharma-700 mb-2">Diabète de Type 2 &amp; HTA</h4>
+                    <p class="text-sm text-slate-600 mb-2">Entretiens d'observance sur les traitements anti-diabétiques et antihypertenseurs — priorité absolue au Nord Atlantique (HTA 35 %, diabète 14 %). Coordination avec le médecin traitant.</p>
+                    <span class="text-xs bg-warning-100 text-warning-700 font-bold px-2 py-1 rounded">Priorité territoriale</span>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <h4 class="font-bold text-pharma-700 mb-2">Polymédication &amp; Iatrogénie</h4>
+                    <p class="text-sm text-slate-600 mb-2">Analyse des interactions médicamenteuses, prévention de la iatrogénie chez les sujets âgés polymédiqués. Directement articulé avec le BPM. Fort enjeu pour une population âgée et polypatologique.</p>
+                    <span class="text-xs bg-territ-100 text-territ-700 font-bold px-2 py-1 rounded">Enjeu gériatrique local</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ ESPACE 3 — PRÉVENTION & DÉPISTAGE ═══════════ -->
+<section id="prevention" class="page-content">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+        <div class="bg-prev-500 px-6 py-8 md:px-10 text-white">
+            <div class="text-xs uppercase tracking-wide text-prev-100 mb-1 font-semibold">Espace 3 · Tous publics</div>
+            <h2 class="text-3xl font-bold mb-1">Éducation à la Santé &amp; Prévention</h2>
+            <p class="text-prev-100 text-lg">Dépistage, animations, partenariats — l'officine acteur de santé publique.</p>
+        </div>
+        <div class="p-6 md:p-10">
+
+            <!-- Actions de dépistage -->
+            <div class="mb-10">
+                <h3 class="text-2xl font-bold text-slate-900 mb-2 border-l-4 border-prev-500 pl-3">Actions de Dépistage Prioritaires</h3>
+                <div class="mb-6 rounded-2xl overflow-hidden shadow-md border border-slate-200">
+                    <img src="images/animation-mt-dents.jpg" alt="Animation santé en pharmacie — Programme M'T Dents, public familial" class="w-full max-h-72 object-cover object-top">
+                    <div class="bg-prev-50 px-4 py-2 text-xs text-prev-700 font-medium text-center">Animation santé en officine — espace Prévention &amp; Dépistage</div>
+                </div>
+
+                <p class="text-slate-600 mb-6">L'espace est un <strong>libre-service santé</strong>, avec animations programmées et accès à l'information. Les thématiques prioritaires sont choisies en fonction de l'épidémiologie locale du Nord Atlantique.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div class="bg-pink-50 border border-pink-200 rounded-2xl p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-pink-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
+                            <h4 class="font-bold text-slate-900">Cancer du Sein</h4>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Octobre Rose — mammographie de dépistage 50-74 ans. Information sur l'auto-examen. Remise des invitations AM.</p>
+                        <span class="text-xs bg-pink-100 text-pink-700 font-bold px-2 py-0.5 rounded">Programme organisé</span>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-blue-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg></div>
+                            <h4 class="font-bold text-slate-900">Cancer Colorectal</h4>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Mars Bleu — remise du kit FIT 50-74 ans en officine (nouveauté). Participation locale ~20–25 % vs 34 % national : fort potentiel d'amélioration.</p>
+                        <span class="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded">Kit FIT disponible en pharmacie</span>
+                    </div>
+                    <div class="bg-purple-50 border border-purple-200 rounded-2xl p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-purple-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9"/></svg></div>
+                            <h4 class="font-bold text-slate-900">Col de l'Utérus</h4>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Incidence et mortalité significativement plus élevées en Martinique. Promotion du test HPV-HR 30-65 ans, vaccination HPV, information sur le frottis.</p>
+                        <span class="text-xs bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded">Priorité Martinique</span>
+                    </div>
+                    <div class="bg-orange-50 border border-orange-200 rounded-2xl p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-orange-500 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+                            <h4 class="font-bold text-slate-900">HTA &amp; Diabète</h4>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Mesures de tension et glycémie capillaire, TROD, dépistage du pré-diabète. HTA ~35 %, diabète ~14 % sur le territoire — priorité #1.</p>
+                        <span class="text-xs bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded">TROD remboursé</span>
+                    </div>
+                    <div class="bg-vert-50 border border-vert-200 rounded-2xl p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-vert-600 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+                            <h4 class="font-bold text-slate-900">Vaccination</h4>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Grippe, COVID-19, HPV (promotion en pharmacie), Zona, DTPolio. La vaccination en pharmacie est désormais un acte rémunéré à fort impact territorial.</p>
+                        <span class="text-xs bg-vert-100 text-vert-700 font-bold px-2 py-0.5 rounded">Acte rémunéré</span>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-slate-600 p-2 rounded-lg"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                            <h4 class="font-bold text-slate-900">M'T Dents &amp; SAPHYR</h4>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Relais des programmes nationaux M'T Dents. Formation au réseau SAPHYR (sécurisation des patients à risque). Orientation et information sur les droits.</p>
+                        <span class="text-xs bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded">Programme national</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Communication & Partenariats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-4 border-l-4 border-vert-500 pl-3">Communication</h3>
+                    <div class="space-y-3">
+                        <div class="bg-white border border-slate-200 rounded-xl p-4 flex items-start gap-3">
+                            <div class="bg-pole-100 p-2 rounded-lg shrink-0"><svg class="w-5 h-5 text-pole-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3"/></svg></div>
+                            <div><strong class="text-sm text-slate-900 block">En ligne</strong><p class="text-xs text-slate-500">Ligne éditoriale santé, réseaux sociaux, écran dynamique en pharmacie (campagnes et affiches numériques), portails et liens partenaires.</p></div>
+                        </div>
+                        <div class="bg-white border border-slate-200 rounded-xl p-4 flex items-start gap-3">
+                            <div class="bg-vert-100 p-2 rounded-lg shrink-0"><svg class="w-5 h-5 text-vert-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+                            <div><strong class="text-sm text-slate-900 block">Supports classiques</strong><p class="text-xs text-slate-500">Flyers thématiques par campagne, affichage vitrine et intérieur, présentoirs de sensibilisation en espace libre-service.</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-4 border-l-4 border-prev-500 pl-3">Partenariats &amp; Conventions</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="bg-white border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3">
+                            <span class="text-prev-500 text-lg">🏥</span><span>Centre de dépistage des cancers (CRCDC Martinique)</span>
+                        </div>
+                        <div class="bg-white border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3">
+                            <span class="text-prev-500 text-lg">🩺</span><span>Radiologue spécialisé — mammographie et imagerie</span>
+                        </div>
+                        <div class="bg-white border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3">
+                            <span class="text-prev-500 text-lg">💊</span><span>Réseau SAPHYR — sécurisation des patients à risque</span>
+                        </div>
+                        <div class="bg-white border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3">
+                            <span class="text-prev-500 text-lg">🩸</span><span>Association Française des Diabétiques</span>
+                        </div>
+                        <div class="bg-white border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3">
+                            <span class="text-prev-500 text-lg">🌸</span><span>ASAD / Drépanocytose — Les Amazones</span>
+                        </div>
+                        <div class="bg-white border border-slate-200 rounded-lg px-4 py-3 flex items-center gap-3">
+                            <span class="text-prev-500 text-lg">🤝</span><span>Acteurs de santé et associations de la commune</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ LEVIER DE CROISSANCE ═══════════ -->
+<section id="croissance" class="page-content">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+        <div class="bg-croiss-500 px-6 py-8 md:px-10 text-white">
+            <h2 class="text-3xl font-bold mb-1">Le Pôle Santé — Levier de Croissance</h2>
+            <p class="text-croiss-100 text-lg">Diversifier les revenus, déconnecter la rentabilité de la seule boîte de médicament.</p>
+        </div>
+        <div class="p-6 md:p-10">
+
+            <!-- Diagnostic des contraintes -->
+            <div class="mb-10">
+                <h3 class="text-2xl font-bold text-slate-900 mb-5 border-l-4 border-territ-500 pl-3">Contraintes Structurelles à Surmonter</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="bg-territ-50 border border-territ-200 rounded-xl p-5">
+                        <h4 class="font-bold text-territ-800 mb-3">Contraintes économiques</h4>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-territ-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Frais de personnel — premier poste, surenchère salariale par pénurie d'adjoints</li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-territ-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Frais d'approche, octroi de mer sur parapharmacie et matériel</li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-territ-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Ruptures de stocks — délais d'approvisionnement, immobilisation</li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-territ-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Érosion des marges médicament remboursable non compensée</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5">
+                        <h4 class="font-bold text-slate-800 mb-3">Modèle rigide à dépasser</h4>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-slate-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Forte dépendance aux ordonnances chroniques et médicaments remboursables</li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-slate-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Rémunération quasi exclusive : marge + honoraires de dispensation</li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-slate-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Services rémunérés (vaccination, TROD, bilans) encore trop peu développés</li>
+                            <li class="flex items-start gap-2"><svg class="w-4 h-4 text-slate-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Décroissance démographique locale — marché contraint</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Les leviers -->
+            <div class="mb-10">
+                <h3 class="text-2xl font-bold text-slate-900 mb-5 border-l-4 border-vert-500 pl-3">Les 3 Leviers de Transformation</h3>
+                <div class="space-y-5">
+                    <div class="bg-white border-l-4 border-pole-500 rounded-r-2xl shadow-sm p-6 flex flex-col md:flex-row gap-6 items-start">
+                        <div class="shrink-0 w-12 h-12 bg-pole-100 rounded-2xl flex items-center justify-center text-pole-600 text-xl font-extrabold">1</div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-bold text-slate-900 mb-1">Services Rémunérés &amp; Prévention</h4>
+                            <p class="text-slate-600 text-sm mb-3">Déconnecter les revenus des seuls volumes de boîtes. Vaccination, TROD, bilans glycémiques, dépistages, entretiens pharmaceutiques — chaque acte générant une rémunération directe de l'Assurance Maladie.</p>
+                            <div class="flex flex-wrap gap-2 text-xs">
+                                <span class="bg-pole-100 text-pole-700 font-bold px-2 py-1 rounded">Vaccination : acte AM</span>
+                                <span class="bg-pole-100 text-pole-700 font-bold px-2 py-1 rounded">TROD : acte AM</span>
+                                <span class="bg-pole-100 text-pole-700 font-bold px-2 py-1 rounded">BPM : 63 €</span>
+                                <span class="bg-pole-100 text-pole-700 font-bold px-2 py-1 rounded">Entretien asthme/AVK</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white border-l-4 border-vert-500 rounded-r-2xl shadow-sm p-6 flex flex-col md:flex-row gap-6 items-start">
+                        <div class="shrink-0 w-12 h-12 bg-vert-100 rounded-2xl flex items-center justify-center text-vert-700 text-xl font-extrabold">2</div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-bold text-slate-900 mb-1">Télémédecine Certifiée — Nouveaux Flux</h4>
+                            <p class="text-slate-600 text-sm mb-3">La cabine Medispot ONE génère des <strong>+10 % de passages mensuels</strong> et capture des ordonnances à forte valeur ajoutée. Elle positionne l'officine comme unique point de recours médical dans les zones sans médecin.</p>
+                            <div class="flex flex-wrap gap-2 text-xs">
+                                <span class="bg-vert-100 text-vert-700 font-bold px-2 py-1 rounded">+10 % passages/mois</span>
+                                <span class="bg-vert-100 text-vert-700 font-bold px-2 py-1 rounded">Ordonnances haute VA</span>
+                                <span class="bg-vert-100 text-vert-700 font-bold px-2 py-1 rounded">Aide 1 225 € ROSP/FAMI</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white border-l-4 border-pharma-500 rounded-r-2xl shadow-sm p-6 flex flex-col md:flex-row gap-6 items-start">
+                        <div class="shrink-0 w-12 h-12 bg-pharma-100 rounded-2xl flex items-center justify-center text-pharma-700 text-xl font-extrabold">3</div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-bold text-slate-900 mb-1">Entretiens Pharmaceutiques — Fidélisation</h4>
+                            <p class="text-slate-600 text-sm mb-3">Fidélisation extrême des patients chroniques et ALD — les plus rentables et les plus fidèles. Le BPM et les entretiens structurés créent une relation de confiance irremplaçable avec votre patientèle âgée et polypathologique.</p>
+                            <div class="flex flex-wrap gap-2 text-xs">
+                                <span class="bg-pharma-100 text-pharma-700 font-bold px-2 py-1 rounded">+20 % fidélité chroniques</span>
+                                <span class="bg-pharma-100 text-pharma-700 font-bold px-2 py-1 rounded">+200 patients captés</span>
+                                <span class="bg-pharma-100 text-pharma-700 font-bold px-2 py-1 rounded">BPM 63 € / patient</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI dashboard -->
+            <div class="bg-pole-900 rounded-2xl p-8 text-white">
+                <h3 class="text-xl font-bold mb-6 text-center">Synthèse des Leviers de Croissance Attendus</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white/10 rounded-2xl p-6 text-center border border-white/20">
+                        <div class="text-4xl font-extrabold text-vert-400 mb-2">+200</div>
+                        <div class="text-sm text-pole-200 font-medium">Nouveaux patients captés</div>
+                        <div class="text-xs text-pole-300 mt-1">grâce à la téléconsultation et aux services</div>
+                    </div>
+                    <div class="bg-white/10 rounded-2xl p-6 text-center border border-white/20">
+                        <div class="text-4xl font-extrabold text-vert-400 mb-2">+10 %</div>
+                        <div class="text-sm text-pole-200 font-medium">Passages mensuels</div>
+                        <div class="text-xs text-pole-300 mt-1">générés par la cabine Medispot ONE</div>
+                    </div>
+                    <div class="bg-white/10 rounded-2xl p-6 text-center border border-white/20">
+                        <div class="text-4xl font-extrabold text-vert-400 mb-2">+20 %</div>
+                        <div class="text-sm text-pole-200 font-medium">Fidélité chroniques</div>
+                        <div class="text-xs text-pole-300 mt-1">via les entretiens pharmaceutiques</div>
+                    </div>
+                </div>
+                <div class="bg-white/5 rounded-xl p-5 border border-white/10 text-center">
+                    <p class="text-pole-100 text-sm">L'intégration de ces services avancés ne rend pas l'officine simplement <em>meilleure</em> —</p>
+                    <p class="text-white font-bold text-lg mt-1">elle la rend <span class="text-vert-400">indispensable</span>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ CONTEXTE TERRITORIAL ═══════════ -->
+<section id="territoire" class="page-content">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+        <div class="bg-territ-500 px-6 py-8 md:px-10 text-white">
+            <h2 class="text-3xl font-bold mb-1">Contexte Territorial — Nord Atlantique · Martinique</h2>
+            <p class="text-territ-100 text-lg">Un désert médical critique, une demande de soins de proximité massive.</p>
+        </div>
+        <div class="p-6 md:p-10">
+
+            <!-- Maillage officinal -->
+            <div class="mb-10">
+                <h3 class="text-2xl font-bold text-slate-900 mb-5 border-l-4 border-territ-500 pl-3">Maillage Officinal : Tension &amp; Densité</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-territ-50 border border-territ-200 rounded-2xl p-5 text-center">
+                        <div class="text-3xl font-extrabold text-territ-600 mb-1">24</div>
+                        <div class="text-sm text-slate-700 font-medium">officines Nord Atlantique</div>
+                    </div>
+                    <div class="bg-territ-50 border border-territ-200 rounded-2xl p-5 text-center">
+                        <div class="text-3xl font-extrabold text-territ-600 mb-1">2 209</div>
+                        <div class="text-sm text-slate-700 font-medium">habitants / officine</div>
+                    </div>
+                    <div class="bg-territ-50 border border-territ-200 rounded-2xl p-5 text-center">
+                        <div class="text-3xl font-extrabold text-territ-600 mb-1">3</div>
+                        <div class="text-sm text-slate-700 font-medium">communes sans officine</div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-sm text-slate-700">
+                    <strong>Analyse :</strong> Maillage dense mais très hétérogène selon les communes. Marché dépendant, stagnant, à faible rentabilité — la tension ne vient pas du manque d'officines mais de la transformation de la fonction et du transfert implicite de charge sanitaire vers la pharmacie.
+                </div>
+            </div>
+
+            <!-- Population -->
+            <div class="mb-10">
+                <h3 class="text-2xl font-bold text-slate-900 mb-5 border-l-4 border-pole-500 pl-3">Population Fragilisée &amp; Vieillissante</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between bg-pole-50 border border-pole-200 rounded-xl px-4 py-3">
+                            <span class="text-sm font-medium text-slate-700">Indice de vieillissement</span>
+                            <span class="font-bold text-pole-700">&gt; 120</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-pole-50 border border-pole-200 rounded-xl px-4 py-3">
+                            <span class="text-sm font-medium text-slate-700">Population +60 ans (actuel)</span>
+                            <span class="font-bold text-pole-700">~30 %</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-warning-50 border border-warning-200 rounded-xl px-4 py-3">
+                            <span class="text-sm font-medium text-slate-700">Population +60 ans (2030)</span>
+                            <span class="font-bold text-warning-700">~40 %</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-territ-50 border border-territ-200 rounded-xl px-4 py-3">
+                            <span class="text-sm font-medium text-slate-700">Fracture numérique chez les aînés</span>
+                            <span class="font-bold text-territ-700">~40 %</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+                        <h4 class="font-bold text-slate-900 mb-3">Profil socio-économique</h4>
+                        <table class="w-full text-sm">
+                            <tbody class="divide-y divide-slate-200">
+                                <tr><td class="py-2 text-slate-600">Revenu médian</td><td class="py-2 font-bold text-slate-900 text-right">18 000 – 23 000 €</td></tr>
+                                <tr><td class="py-2 text-slate-600">Taux de chômage</td><td class="py-2 font-bold text-territ-700 text-right">~25 %</td></tr>
+                                <tr><td class="py-2 text-slate-600">Taux de pauvreté</td><td class="py-2 font-bold text-territ-700 text-right">~27 %</td></tr>
+                                <tr><td class="py-2 text-slate-600">Ouvriers &amp; employés</td><td class="py-2 font-bold text-slate-900 text-right">~60 %</td></tr>
+                                <tr><td class="py-2 text-slate-600">Cadres &amp; professions libérales</td><td class="py-2 font-bold text-slate-900 text-right">&lt; 6 %</td></tr>
+                                <tr><td class="py-2 text-slate-600">Population 45 ans et +</td><td class="py-2 font-bold text-pole-700 text-right">57 %</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pathologies -->
+            <div class="mb-10">
+                <h3 class="text-2xl font-bold text-slate-900 mb-5 border-l-4 border-warning-500 pl-3">Pathologies : Une Demande de Suivi Clinique Massive</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-warning-50 border border-warning-200 rounded-2xl p-4 text-center">
+                        <div class="text-2xl font-extrabold text-warning-700 mb-1">35 %</div>
+                        <div class="text-xs text-slate-600">HTA (vs ~30 % national)</div>
+                    </div>
+                    <div class="bg-orange-50 border border-orange-200 rounded-2xl p-4 text-center">
+                        <div class="text-2xl font-extrabold text-orange-700 mb-1">14 %</div>
+                        <div class="text-xs text-slate-600">Diabète de type 2</div>
+                    </div>
+                    <div class="bg-territ-50 border border-territ-200 rounded-2xl p-4 text-center">
+                        <div class="text-2xl font-extrabold text-territ-700 mb-1">25 %</div>
+                        <div class="text-xs text-slate-600">Obésité adulte</div>
+                    </div>
+                    <div class="bg-slate-100 border border-slate-200 rounded-2xl p-4 text-center">
+                        <div class="text-2xl font-extrabold text-slate-700 mb-1">~20 %</div>
+                        <div class="text-xs text-slate-600">Renoncement aux soins (zones rurales)</div>
+                    </div>
+                </div>
+                <div class="bg-slate-800 text-white rounded-xl p-5 flex items-start gap-4">
+                    <svg class="w-7 h-7 text-yellow-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <p class="text-sm text-slate-300">Pathologies environnementales spécifiques : <strong class="text-white">pollution au chlordécone</strong> (zones agricoles), risques d'inondations et glissements de terrain. Insuffisance cardiaque, BPCO, polymédication et iatrogénie également prépondérantes.</p>
+                </div>
+            </div>
+
+            <!-- Segments de population -->
+            <div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-5 border-l-4 border-pharma-500 pl-3">Besoins par Segment de Population</h3>
+                <div class="space-y-4">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="text-2xl">👴</span>
+                            <h4 class="font-bold text-slate-900">Les Aînés</h4>
+                            <span class="bg-territ-100 text-territ-700 text-xs font-bold px-2 py-0.5 rounded ml-auto">Priorité 1</span>
+                        </div>
+                        <p class="text-sm text-slate-600">Suivi HTA / diabète / insuffisance cardiaque, dispositifs médicaux et incontinence, <strong>surveillance iatrogénique</strong>, ETP adapté à la faible littératie numérique, maintien à domicile, gestion de la polymédication. Segment le plus impacté par la fracture numérique.</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="text-2xl">💼</span>
+                            <h4 class="font-bold text-slate-900">Actifs &amp; Actifs Précaires</h4>
+                            <span class="bg-croiss-100 text-croiss-700 text-xs font-bold px-2 py-0.5 rounded ml-auto">Flux téléconsultation</span>
+                        </div>
+                        <p class="text-sm text-slate-600">Soins non programmés, sevrage tabagique, prévention diabète, observance, <strong>accès médical rapide et flexible</strong> (téléconsultation sans perte de journée de travail), information sur les droits, santé mentale. La cabine Medispot ONE répond directement à ce besoin.</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="text-2xl">👨‍👩‍👧</span>
+                            <h4 class="font-bold text-slate-900">Familles</h4>
+                            <span class="bg-prev-100 text-prev-700 text-xs font-bold px-2 py-0.5 rounded ml-auto">Prévention &amp; dépistage</span>
+                        </div>
+                        <p class="text-sm text-slate-600">Suivi grossesse, vaccinations, dermatologie, effets indésirables, droits des patients, suivi pédiatrique, <strong>urgences légères</strong> (otites, angines via téléconsultation), accès rapide aux soins de premier recours.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="bg-pole-900 text-slate-400 py-10 mt-auto border-t-4 border-vert-500">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+            <div class="text-center md:text-left">
+                <div class="flex flex-col items-center md:items-start gap-3 mb-3">
+                    <img src="images/logo-pole-sante.png" alt="le Pôle Santé — Concept care" class="h-12 w-auto">
+                    <img src="https://elodiatech.com/wp-content/uploads/2023/11/elodia-tech-LOGO-B.png" alt="Elodia Tech" class="h-7 w-auto brightness-0 invert opacity-70">
+                </div>
+                <p class="text-pole-200 text-sm italic">"L'officine au Service du Territoire, Un levier de croissance."</p>
+            </div>
+            <div class="flex flex-wrap justify-center md:justify-end items-center gap-4">
+                <div class="bg-white rounded-xl p-2 shadow-sm">
+                    <img src="https://elodiatech.com/wp-content/uploads/2025/05/logo-clicodoc-150x150.png" alt="ClikOdoc" class="h-10 w-auto">
+                </div>
+                <div class="bg-white rounded-xl p-2 shadow-sm">
+                    <img src="https://elodiatech.com/wp-content/uploads/2025/05/logo-medispot-150x150.png" alt="Medispot" class="h-10 w-auto">
+                </div>
+                <div class="bg-white rounded-xl p-2 shadow-sm">
+                    <img src="https://elodiatech.com/wp-content/uploads/2023/05/Sydel-150x150.jpg" alt="Sydel" class="h-10 w-auto">
+                </div>
+                <div class="bg-pole-800 border border-pole-700 rounded-xl p-3 text-center text-xs">
+                    <div class="text-vert-400 font-bold text-sm">ARS · CPAM</div>
+                    <div class="text-slate-400 text-xs">CTM · CAP Nord</div>
+                </div>
+            </div>
+        </div>
+        <p class="text-center text-xs opacity-60">Document confidentiel — cadre légal CSP art. R.4235-22 à R.4235-25 · Contenu à orientation exclusivité santé publique · © Elodia Tech</p>
+    </div>
+</footer>
+
+<script>
+    function showPage(pageId) {
+        document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+
+        const colorMap = {
+            'concept':    'border-vert-500',
+            'telecons':   'border-telecons-500',
+            'entretiens': 'border-pharma-500',
+            'prevention': 'border-prev-500',
+            'croissance': 'border-croiss-500',
+            'territoire': 'border-territ-500'
+        };
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            const target = btn.dataset.target;
+            if (target === pageId) {
+                btn.classList.add('active','text-white','bg-pole-800/50','border-b-4', colorMap[pageId]);
+                btn.classList.remove('text-pole-100','border-transparent');
+                btn.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+            } else {
+                btn.classList.remove('active','text-white','bg-pole-800/50','border-b-4', colorMap[target]);
+                btn.classList.add('text-pole-100','border-transparent');
+            }
+        });
+    }
+</script>
+</body>
+</html>
