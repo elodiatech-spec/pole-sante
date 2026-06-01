@@ -69,10 +69,7 @@
     <nav class="bg-pole-900 border-t border-pole-700 overflow-x-auto nav-scroll">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ul class="flex w-max" id="nav-tabs">
-                <li><button onclick="showPage('concept')"     class="nav-btn active px-5 py-4 text-sm font-bold text-white border-b-4 border-vert-500 bg-pole-800/50 transition-colors" data-target="concept">Vue d'ensemble</button></li>
-                <li><button onclick="showPage('telecons')"    class="nav-btn px-5 py-4 text-sm font-bold text-pole-100 hover:text-white border-b-4 border-transparent hover:border-telecons-500 transition-colors" data-target="telecons">Téléconsultation</button></li>
-                <li><button onclick="showPage('entretiens')"  class="nav-btn px-5 py-4 text-sm font-bold text-pole-100 hover:text-white border-b-4 border-transparent hover:border-pharma-500 transition-colors" data-target="entretiens">Entretiens Pharmaceutiques</button></li>
-                <li><button onclick="showPage('prevention')"  class="nav-btn px-5 py-4 text-sm font-bold text-pole-100 hover:text-white border-b-4 border-transparent hover:border-prev-500 transition-colors" data-target="prevention">Prévention & Dépistage</button></li>
+                <li><button onclick="showPage('concept')"     class="nav-btn active px-5 py-4 text-sm font-bold text-white border-b-4 border-vert-500 bg-pole-800/50 transition-colors" data-target="concept">le Pôle Santé</button></li>
                 <li><button onclick="showPage('croissance')"  class="nav-btn px-5 py-4 text-sm font-bold text-pole-100 hover:text-white border-b-4 border-transparent hover:border-croiss-500 transition-colors" data-target="croissance">Levier de Croissance</button></li>
                 <li><button onclick="showPage('territoire')"  class="nav-btn px-5 py-4 text-sm font-bold text-pole-100 hover:text-white border-b-4 border-transparent hover:border-territ-500 transition-colors" data-target="territoire">Contexte Territorial</button></li>
             </ul>
@@ -100,12 +97,23 @@
                 <h2 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">le Pôle Santé</h2>
                 <p class="text-xl font-semibold text-pole-100 mb-5 italic max-w-xl">"L'officine au Service du Territoire, Un levier de croissance."</p>
                 <p class="text-pole-100 text-base max-w-2xl mb-8 leading-relaxed">Transformez votre pharmacie en véritable <strong class="text-white">hub de santé de proximité</strong> : trois espaces complémentaires — téléconsultation connectée, entretiens pharmaceutiques structurés, prévention et dépistage — pour pallier le désert médical, fidéliser vos patients chroniques et diversifier vos revenus.</p>
+                <p class="text-xs uppercase tracking-wide text-pole-200 font-semibold mb-3">Les 3 espaces — cliquez pour découvrir</p>
                 <div class="flex flex-wrap gap-3">
-                    <button onclick="showPage('telecons')" class="bg-white text-pole-700 font-bold px-6 py-3 rounded-xl hover:bg-pole-50 transition-colors flex items-center text-sm">
-                        Espace 1 — Téléconsultation
+                    <button onclick="showPage('telecons')" class="bg-white text-pole-700 font-bold px-5 py-3 rounded-xl hover:bg-pole-50 transition-colors flex items-center text-sm">
+                        <span class="bg-pole-500 text-white w-6 h-6 rounded-full flex items-center justify-center mr-2 text-xs font-extrabold shrink-0">1</span>
+                        Espace de Téléconsultation
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </button>
-                    <button onclick="showPage('croissance')" class="bg-vert-500 text-white font-bold px-6 py-3 rounded-xl hover:bg-vert-600 transition-colors text-sm">Leviers de croissance</button>
+                    <button onclick="showPage('entretiens')" class="bg-white text-pharma-700 font-bold px-5 py-3 rounded-xl hover:bg-pharma-50 transition-colors flex items-center text-sm">
+                        <span class="bg-pharma-500 text-white w-6 h-6 rounded-full flex items-center justify-center mr-2 text-xs font-extrabold shrink-0">2</span>
+                        Entretiens Pharmaceutiques
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                    <button onclick="showPage('prevention')" class="bg-white text-prev-700 font-bold px-5 py-3 rounded-xl hover:bg-prev-50 transition-colors flex items-center text-sm">
+                        <span class="bg-prev-500 text-white w-6 h-6 rounded-full flex items-center justify-center mr-2 text-xs font-extrabold shrink-0">3</span>
+                        Espace Prévention
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </button>
                 </div>
             </div>
             <div class="shrink-0 w-full lg:w-72">
@@ -119,7 +127,6 @@
                         <li class="flex items-center gap-2"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Entretiens pharmaceutiques (BPM)</li>
                         <li class="flex items-center gap-2"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Prévention, dépistage, vaccination</li>
                         <li class="flex items-center gap-2"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Formation & accompagnement Elodia</li>
-                        <li class="flex items-center gap-2"><svg class="w-4 h-4 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Partenariats ARS · CPAM · CTM · CAP Nord</li>
                     </ul>
                 </div>
             </div>
@@ -771,6 +778,37 @@
 
 </main>
 
+<!-- ═══════════ APPEL À L'ACTION — OFFRE COMMERCIALE ═══════════ -->
+<section class="bg-gradient-to-r from-pole-900 via-pole-700 to-pole-500 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-10">
+            <div class="flex-1">
+                <span class="badge-green text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Offre Pôle Santé · Concept Care</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold mt-4 mb-3 leading-tight">Déployez votre Pôle Santé dès aujourd'hui</h2>
+                <p class="text-pole-100 max-w-2xl mb-6 leading-relaxed">Elodia Tech vous accompagne de A à Z : équipement <strong class="text-white">Medispot ONE</strong>, intégration <strong class="text-white">ClikOdoc</strong>, formation de votre équipe, mise en conformité réglementaire et accompagnement aux dispositifs d'aide (ROSP / FAMI). Transformez votre officine en véritable hub de santé de proximité.</p>
+                <ul class="grid sm:grid-cols-2 gap-x-8 gap-y-2.5 text-sm text-pole-100 max-w-2xl">
+                    <li class="flex items-center gap-2"><svg class="w-5 h-5 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Audit &amp; étude d'implantation offerts</li>
+                    <li class="flex items-center gap-2"><svg class="w-5 h-5 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Installation clé en main de la cabine</li>
+                    <li class="flex items-center gap-2"><svg class="w-5 h-5 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Formation &amp; accompagnement continu</li>
+                    <li class="flex items-center gap-2"><svg class="w-5 h-5 text-vert-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Aide à l'obtention des financements</li>
+                </ul>
+            </div>
+            <div class="shrink-0 w-full lg:w-80 bg-white rounded-2xl p-6 text-slate-800 shadow-2xl">
+                <h3 class="font-bold text-lg text-pole-900 mb-1">Demander une démonstration</h3>
+                <p class="text-sm text-slate-500 mb-5">Un expert Elodia Tech vous recontacte sous 48 h.</p>
+                <a href="https://elodiatech.com/contact" target="_blank" rel="noopener" class="block w-full bg-vert-500 hover:bg-vert-600 text-white font-bold text-center px-6 py-3 rounded-xl transition-colors mb-3">Être recontacté</a>
+                <a href="https://elodiatech.com" target="_blank" rel="noopener" class="block w-full border-2 border-pole-500 text-pole-700 hover:bg-pole-50 font-bold text-center px-6 py-3 rounded-xl transition-colors">Visiter elodiatech.com</a>
+                <div class="mt-5 pt-5 border-t border-slate-200 text-sm space-y-2">
+                    <!-- À personnaliser : coordonnées de votre officine / commercial -->
+                    <div class="flex items-center gap-3 text-slate-600"><span class="text-pole-500">📞</span><span>05 96 00 00 00</span></div>
+                    <div class="flex items-center gap-3 text-slate-600"><span class="text-pole-500">✉️</span><a href="mailto:contact@elodiatech.com" class="text-pole-600 font-medium">contact@elodiatech.com</a></div>
+                    <div class="flex items-center gap-3 text-slate-600"><span class="text-pole-500">📍</span><span>Nord Atlantique · Martinique</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ═══════════ FOOTER ═══════════ -->
 <footer class="bg-pole-900 text-slate-400 py-10 mt-auto border-t-4 border-vert-500">
     <div class="max-w-7xl mx-auto px-4">
@@ -791,10 +829,6 @@
                 </div>
                 <div class="bg-white rounded-xl p-2 shadow-sm">
                     <img src="https://elodiatech.com/wp-content/uploads/2023/05/Sydel-150x150.jpg" alt="Sydel" class="h-10 w-auto">
-                </div>
-                <div class="bg-pole-800 border border-pole-700 rounded-xl p-3 text-center text-xs">
-                    <div class="text-vert-400 font-bold text-sm">ARS · CPAM</div>
-                    <div class="text-slate-400 text-xs">CTM · CAP Nord</div>
                 </div>
             </div>
         </div>
